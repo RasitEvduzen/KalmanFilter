@@ -38,16 +38,17 @@ NofState = size(F,1);                  % Number Of State
 P = 1e-3*eye(NofState,NofState);          % High Estimate Uncertainty
 Q = 1e-3*eye(NofState,NofState);          % Processes Noise Cov
 R = Posestd^2*eye(size(H,1),size(H,1));   % Measurement Noise Cov
-XKalman(:,1) = [RealTraj(1) 0 0 RealTraj(2) 0 0]';         
+% XKalman(:,1) = [RealTraj(1) 0 0 RealTraj(2) 0 0]';   
+XKalman(:,1) = [0 0 0 0 0 0]';   
 %% Kalman Filter
 for i=1:size(Measurement,2)
     % Time Update (Prediction) Phase
-    XKalman(:,i) = F * XKalman(:,i);   % State Extrapolation Equation
-    P = F*P*F' + Q;                    % Uncertainty Extrapolation Equation
+    XKalman(:,i) = F*XKalman(:,i);   % State Extrapolation Equation
+    P = F*P*F'+Q;                    % Uncertainty Extrapolation Equation
     % Measurement Update (Correction) Phase
     K = P*H'*inv(H*P*H'+R);           % Compute Kalman Gain!
-    XKalman(:,i+1) = XKalman(:,i) + K * (Measurement(:,i) - H*XKalman(:,i));  % Update State with Measurement & Kalman Gain
-    P = (eye(NofState,NofState)-K*H)*P*(eye(NofState,NofState)-K*H)' + K*R*K';  % Update Estimation Uncertainty
+    XKalman(:,i+1) = XKalman(:,i)+K*(Measurement(:,i)-H*XKalman(:,i));  % Update State with Measurement & Kalman Gain
+    P = (eye(NofState,NofState)-K*H)*P*(eye(NofState,NofState)-K*H)'+K*R*K';  % Update Estimation Uncertainty
 end
 
 %% Plot Data
@@ -66,7 +67,7 @@ for i=1:5:size(Measurement,2)
     subplot(2,3,2)
     plot(TimeVec(1:i),XKalman(1,1:i),'k','LineWidth',2),grid on, hold on
     plot(TimeVec(1:i),Measurement(1,1:i),'r','LineWidth',1)
-    xlabel("Time [Sn]"),ylabel("Px [Mp]")
+    xlabel("Time [Sn]"),ylabel("Px [M]")
     legend("Kalman Trajectory","Measurement Trajectory",'Location','northeast')
 
     subplot(2,3,5)
