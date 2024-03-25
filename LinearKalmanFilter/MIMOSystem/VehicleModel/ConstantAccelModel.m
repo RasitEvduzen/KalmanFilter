@@ -33,8 +33,8 @@ H = [1 0 0 0 0 0;
 % X -> pose, vel, acc  |  Y -> pose, vel, acc [M, M/Sn, M/Sn^2];
 NofState = size(F,1);                  % Number Of State
 % ---------------------- P~Q~R Matrix Random value --------------------
-% High Kalman Gain: if R >> P => P/(P+R) ~= K ~= 0 (Algorithm belief measurement)
-% Low Kalman Gain:  if R << P => P/(P+R) ~= K ~= 1 (Algorithm belief kalman model)
+% High Kalman Gain: if R >> P => K = P/(P+R) | K ~= 0 (Algorithm belief kalman model)  XKalman(:,i+1) = XKalman(:,i);
+% Low Kalman Gain:  if R << P => K = P/(P+R) | K ~= 1 (Algorithm belief measurement)   XKalman(:,i+1) = Measurement(:,i); 
 P = 1e-3*eye(NofState,NofState);          % High Estimate Uncertainty
 Q = 1e-3*eye(NofState,NofState);          % Processes Noise Cov
 R = Posestd^2*eye(size(H,1),size(H,1));   % Measurement Noise Cov
