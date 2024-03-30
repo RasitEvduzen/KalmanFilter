@@ -25,7 +25,7 @@ F = [1 Ts .5*Ts^2 0 0 0;
     0 0 1 0 0 0;
     0 0 0 1 Ts .5*Ts^2;
     0 0 0 0 1 Ts;
-    0 0 0 0 0 1]; % System Matrix (State Space)
+    0 0 0 0 0 1]; % State Transition Matrix
 
 H = [1 0 0 0 0 0;
     0 0 0 1 0 0]; % Measurement Matrix  (Output Selection)
