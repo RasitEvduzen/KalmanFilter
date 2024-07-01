@@ -4,12 +4,12 @@ clc,clear all,close all;
 % Kalman Filter Linear Regression
 %% Create Data
 NoD = 1e2;
-X = linspace(0, 10, NoD);  % Bağımsız değişken (x)
-true_m = 2.5;  % Gerçek eğim
-true_b = 1.0;  % Gerçek kesişim
-Y = true_m * X + true_b + normrnd(0, 0.5, size(X));  % Gürültülü çıkış (y)
+X = linspace(0, 10, NoD);  
+true_m = 2.5; 
+true_b = 1.0;  
+Y = true_m * X + true_b + normrnd(0, 0.5, size(X)); 
 
-% Kalman filtresi parametreleri
+% Kalman filter Params
 theta = [0.0; 0.0];  % Initial Parameters [m; b]
 P = eye(2);          % Estimation variance Cov
 Q = eye(2) * 1e-5;   % Processes Noise Cov
