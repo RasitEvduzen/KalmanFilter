@@ -1,4 +1,4 @@
-clc,clear all, close;
+openExample('control_deeplearning/TrainDDPGAgentToControlFlyingRobotExample')clc,clear all, close;
 % Written By: Rasit
 % Kalman Filter Based Fourier Series Decomposition
 % Date: 06-Jul-2024
@@ -28,7 +28,7 @@ for k = 1:length(y)
     for n = 1:noh
         H(1, 2*n-1) = cos(2*pi*n*t_span(k));   % Signal Even Component
         H(1, 2*n) = sin(2*pi*n*t_span(k));     % Signal Odd  Component
-    end
+    end 
 
     % Prediction Phase
     x_pred = F * x_est;
