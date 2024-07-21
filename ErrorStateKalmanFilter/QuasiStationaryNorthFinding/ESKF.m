@@ -68,14 +68,11 @@ Ax_mean = mean(AX(1:avarage_sample));
 Ay_mean = mean(AY(1:avarage_sample));
 Az_mean = mean(AZ(1:avarage_sample));
 
-% ------------- Leveling and direct gyrocompassing calculations -------------
-% [roll_ini pitch_ini] = accel2attitude(-[Ay_mean Az_mean Ax_mean]'); % roll, pitch angles
-% [yaw_ini]  = stationaryGyrocompassing([Gy_mean Gz_mean Gx_mean], [roll_ini pitch_ini]);
 
-
-% ---------------------- Triad Settings ----------------------
+% ---------------------- Triad Settings & Avaraging Data ----------------------
 F_val = [-AY(avarage_sample:end) AZ(avarage_sample:end) -AX(avarage_sample:end)]';
 W_val = [-GY(avarage_sample:end) GZ(avarage_sample:end) -GX(avarage_sample:end)]';
+% ------------- Leveling and direct gyrocompassing calculations -------------
 [roll_ini pitch_ini] = accel2attitude([-Ay_mean Az_mean -Ax_mean]'); % roll, pitch angles
 [yaw_ini]  = stationaryGyrocompassing([-Gy_mean Gz_mean -Gx_mean], [roll_ini pitch_ini]);
 Euler_Ang = [roll_ini pitch_ini yaw_ini]';          % Attitude Initial value
