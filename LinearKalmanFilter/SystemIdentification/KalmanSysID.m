@@ -37,7 +37,8 @@ for t = 2:NoD
     theta_hat = theta_hat+K*S;
     P = (eye(size(theta,1))-K*phi')*P;
     theta(:, t) = theta_hat;
-
+    
+    if mod(t,10) == 0
     clf
     subplot(221)
     plot(1:t,y(1:t))
@@ -46,25 +47,26 @@ for t = 2:NoD
 
     subplot(222)
     plot(1:t, theta(1,1:t),"r",LineWidth=2),hold on
-    yline(true_a,"b"),xline(50,"b")
+    yline(true_a,"b--",LineWidth=2),xline(50,"b--",LineWidth=2)
     title('Estimated System Parameters');
     xlabel('Sample'),ylabel('a(t)'),axis([-1 101 -.1 1.5])
     legend("Estimated Parameter","Real Parameter")
 
     subplot(223)
     plot(1:t, theta(2,1:t),"r",LineWidth=2),hold on
-    yline(true_b,"b"),xline(50,"b")
+    yline(true_b,"b--",LineWidth=2),xline(50,"b--",LineWidth=2)
     title('Estimated System Parameters');
     xlabel('Sample'),ylabel('b(t)'),axis([-1 101 -.1 1.75])
     legend("Estimated Parameter","Real Parameter")
 
     subplot(224)
     plot(1:t, theta(3,1:t),"r",LineWidth=2),hold on
-    yline(e_t,"b"),xline(50,"b")
+    yline(e_t,"b--",LineWidth=2),xline(50,"b--",LineWidth=2)
     title('Estimated System Parameters');
     xlabel('Sample'),ylabel('e(t)'),axis([-1 101 -.5 1.5])
     legend("Estimated Parameter","Real Parameter")
     drawnow
+    end
 end
 
 
