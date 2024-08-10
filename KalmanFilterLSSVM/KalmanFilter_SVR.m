@@ -1,4 +1,4 @@
-% Non linear function using Kalman-tuned Recursive Least Squares Support Vector Regression method
+% Kalman-tuned Least Squares Support Vector for Nonlinear Regression
 % Original Written By: Rasit
 % 07-Mar-2024
 clc,clear all,close all;
@@ -34,7 +34,6 @@ ypred = zeros(NoD,1);
 tmp = zeros(NoD,1);
 
 figure('units','normalized','outerposition',[0 0 1 1],'color','w')
-gif('KalmanTunedSVR.gif')
 for k=1:NoD
     [x_kalman,K,P] = kalman_filter(A(k,:),b(k,:),x_kalman,P,Q,R);
     % Bias and alpha LaGrange Multipliers
@@ -55,7 +54,6 @@ for k=1:NoD
     title('Kalman-Tuned SVR Nonlinear Regression');
     legend('Noisy Data', 'Kalman-Tuned SVR ');
     drawnow
-    gif
 end
 
 function [x,K,P] = kalman_filter(a_k,b_k,x,P,Q,R)
