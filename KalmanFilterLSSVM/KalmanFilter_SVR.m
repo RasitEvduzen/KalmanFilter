@@ -12,10 +12,8 @@ ytrain = 0.01*xtrain.*xtrain + 0.1*exp(-xtrain) + sin(xtrain) + 0.1*randn(NoD,1)
 %% Train RLS-SVM
 C = 100;     % Over Fitting Param (C=100)
 gamma = 5e-1; % RBF param, equal to 1/2sigma^2 (g=1e-2)
-
 kernelSelect = 'rbf';
 K = Kernel(kernelSelect,xtrain,gamma);
-
 A = [0, ones(1,NoD);
      ones(NoD,1), (K + 1/C*eye(NoD))];
 b = [0; ytrain];
@@ -29,7 +27,7 @@ Q = 1e-5*eye(size(A,1)); % Process noise covariance
 R = 1e-2;                  % Measurement noise covariance
 
 % Prediction Stage
-xpred = xtrain; % Prediction Input
+xpred = xtrain;         % Prediction Input
 ypred = zeros(NoD,1);
 tmp = zeros(NoD,1);
 
@@ -59,11 +57,11 @@ end
 function [x,K,P] = kalman_filter(a_k,b_k,x,P,Q,R)
 a_k = a_k(:);
 b_k = b_k(:);
-% Predict
+% Prediction Phase
 x_pred = x;            % Predicted state (No process model here)
 P_pred = P + Q;        % Predicted covariance
 
-% Correction
+% Correction Phase
 K = (P_pred*a_k)/(a_k'*P_pred*a_k + R); % Compute Kalman Gain
 x = x_pred + K*(b_k - a_k'*x_pred);     % State Update
 P = (eye(size(K,1)) - K*a_k')*P_pred;   % Covariance Update
