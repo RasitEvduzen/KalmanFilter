@@ -10,7 +10,6 @@ NoD = length(xtrain);
 ytrain = 0.01*xtrain.*xtrain + 0.1*exp(-xtrain) + sin(xtrain) + 0.1*randn(NoD,1);
 
 %% Train RLS-SVM
-K = zeros(NoD,NoD);
 C = 100;     % Over Fitting Param (C=100)
 gamma = 5e-1; % RBF param, equal to 1/2sigma^2 (g=1e-2)
 
@@ -35,6 +34,7 @@ ypred = zeros(NoD,1);
 tmp = zeros(NoD,1);
 
 figure('units','normalized','outerposition',[0 0 1 1],'color','w')
+gif('KalmanTunedSVR.gif')
 for k=1:NoD
     [x_kalman,K,P] = kalman_filter(A(k,:),b(k,:),x_kalman,P,Q,R);
     % Bias and alpha LaGrange Multipliers
@@ -52,9 +52,10 @@ for k=1:NoD
     plot(xtrain, ytrain,'ko-', 'LineWidth', 2), hold on;
     plot(xpred, ypred,'r.-', 'LineWidth', 2);
     axis([0 21 -2 5.5])
-    title('Kalman-Tuned RLS-SVR Regression');
-    legend('Noisy Data', 'Kalman-Tuned RLS-SVR Output');
+    title('Kalman-Tuned SVR Nonlinear Regression');
+    legend('Noisy Data', 'Kalman-Tuned SVR ');
     drawnow
+    gif
 end
 
 function [x,K,P] = kalman_filter(a_k,b_k,x,P,Q,R)
