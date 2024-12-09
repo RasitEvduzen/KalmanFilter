@@ -1,9 +1,8 @@
 // ------------------------------------------------------------------
 // This Code include Error State Kalman Filter and Their Functions
 // Written By: Rasit Evduzen
-// Email: rasit.evduzen@nh-tech.ai
 // Version: v0.0
-// Date:  27.12.2023
+// Date:  27.12.2022
 // Latest Update: 03.02.2023
 
 // --------------------------------- Libraries  ---------------------------------
