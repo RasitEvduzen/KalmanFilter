@@ -1,4 +1,4 @@
-openExample('control_deeplearning/TrainDDPGAgentToControlFlyingRobotExample')clc,clear all, close;
+clc,clear all, close;
 % Written By: Rasit
 % Kalman Filter Based Fourier Series Decomposition
 % Date: 06-Jul-2024
