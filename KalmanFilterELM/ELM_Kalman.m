@@ -4,8 +4,8 @@
 clc, clear all, close all;
 %% Nonlinear Classification
 % Create Data Spiral Data
-B = 4;
-N = 200;
+B = 5;
+N = 2e2;
 Tall = [];
 for i = 1:N/2
     theta = pi/2 + (i-1)*[(2*B-1)/N]*pi;
