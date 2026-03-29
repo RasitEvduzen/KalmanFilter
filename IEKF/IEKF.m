@@ -7,17 +7,34 @@ clc, clear all, close all;
 %% Simulation Parameters
 Ts       = 1e-2;                                     % Sampling Period    [s]
 TrajTime = 10;                                       % Trajectory Time    [s]
-Tstep    = linspace(0, pi, TrajTime/Ts);
+N_seg    = TrajTime/Ts;                              % Samples per segment
+Tstep    = linspace(0, pi, N_seg);
+omega    = pi / ((N_seg-1)*Ts);                      % Angular rate [rad/s]
 xunit    = 3*cos(Tstep);
 yunit    = 3*sin(Tstep);
-RealTraj = [linspace(3,3,size(xunit,2))   xunit  linspace(-3,-3,size(xunit,2))  -xunit;
-    linspace(-4,0,size(yunit,2))   yunit  linspace(0,-4,size(yunit,2))   -yunit-4];
+
+RealTraj = [linspace(3,3,N_seg)    xunit  linspace(-3,-3,N_seg)  -xunit;
+            linspace(-4,0,N_seg)   yunit  linspace(0,-4,N_seg)   -yunit-4];
 NoD      = size(RealTraj, 2);
 tspan    = (0:NoD-1) * Ts;                           % Time Vector        [s]
 
-vx_true   = gradient(RealTraj(1,:), Ts);
-vy_true   = gradient(RealTraj(2,:), Ts);
+% Analytic Velocities (per segment)
+vx_s1 = zeros(1, N_seg);
+vy_s1 = ( 4 / ((N_seg-1)*Ts)) * ones(1, N_seg);     % y: -4 -> 0
+
+vx_s2 = -3*sin(Tstep) * omega;
+vy_s2 =  3*cos(Tstep) * omega;
+
+vx_s3 = zeros(1, N_seg);
+vy_s3 = (-4 / ((N_seg-1)*Ts)) * ones(1, N_seg);     % y: 0 -> -4
+
+vx_s4 =  3*sin(Tstep) * omega;
+vy_s4 = -3*cos(Tstep) * omega;
+
+vx_true   = [vx_s1, vx_s2, vx_s3, vx_s4];
+vy_true   = [vy_s1, vy_s2, vy_s3, vy_s4];
 TrueState = [RealTraj; vx_true; vy_true];            % [px;py;vx;vy] x NoD
+
 
 %% CV Motion Model (Linear)
 F = [1 0 Ts 0;
