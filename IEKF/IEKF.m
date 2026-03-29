@@ -18,7 +18,7 @@ RealTraj = [linspace(3,3,N_seg)    xunit  linspace(-3,-3,N_seg)  -xunit;
 NoD      = size(RealTraj, 2);
 tspan    = (0:NoD-1) * Ts;                           % Time Vector        [s]
 
-% Analytic Velocities (per segment)
+% Analytic Velocities 
 vx_s1 = zeros(1, N_seg);
 vy_s1 = ( 4 / ((N_seg-1)*Ts)) * ones(1, N_seg);     % y: -4 -> 0
 
