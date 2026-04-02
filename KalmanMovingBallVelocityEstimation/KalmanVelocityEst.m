@@ -2,7 +2,6 @@ clc, clear, close all;
 % Kalman Filter Based Tracked Object Velocity Estimation
 % Written By: Rasit
 % Date: 11-Aug-2024
-%%
 %% Load Data
 videoFile = 'LinearTraj.avi';
 load BallTrajLinear.mat
@@ -41,7 +40,7 @@ trackedCoordinates = [];
 %% Kalman Loop
 figure('Units','pixels','Position',[0 0 1920 1080],'Color','w','MenuBar','none','ToolBar','none');
 idx = 0;
-SimPlot = 0;
+SimPlot = 1;
 while hasFrame(videoReader)
     frame = readFrame(videoReader);
     idx   = idx + 1;

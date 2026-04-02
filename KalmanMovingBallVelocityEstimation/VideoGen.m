@@ -36,7 +36,7 @@ fig           = figure('Units','pixels','Position',[0 0 1920 1080],'Color','w', 
                        'MenuBar','none','ToolBar','none');
 ax            = gca;
 ax.Units      = 'pixels';
-ax.Position   = [0 0 1920 1080];                     % Exact pixel fill, no margins
+ax.Position   = [0 0 1920 1080];                   
 ballDiameter  = 30;
 
 for k = 1:length(t)
