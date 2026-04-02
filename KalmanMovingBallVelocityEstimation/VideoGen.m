@@ -2,70 +2,100 @@ clc, clear, close all;
 % Ball Video Creator Script
 % Written By: Rasit
 % Date: 11-Aug-2024
-%% 
-videoFile = 'LinearTraj.avi'; % Video file name
-% videoFile = 'InfTraj.avi'; % Video file name
-writerObj = VideoWriter(videoFile, 'Uncompressed AVI'); % VideoWriter object
-writerObj.FrameRate = 30; % Frame rate
+%%
+videoFile = 'LinearTraj.avi';
+% videoFile = 'InfTraj.avi';
+writerObj = VideoWriter(videoFile, 'Uncompressed AVI');
+writerObj.FrameRate = 30;
 open(writerObj);
 
-%% Infinity Trajectory
-% t = linspace(0,2*pi,200)'; 
-% NoD = size(t,2);       % Number Of Data
-% x = 5e2*sin(t)+500;   
-% y = 5e2*sin(2*t)+500;
-% dt = t(2)-t(1);
-% xdot = diff(x)/dt; % dx/dt
-% ydot = diff(y)/dt; % dy/dt
-% xdot = [xdot; xdot(end)];
-% ydot = [ydot; ydot(end)];
-% 
-% BallTraj.x = x;
-% BallTraj.xnoise = x+randn(NoD,1);
-% BallTraj.xd = xdot;
-% BallTraj.y = y;
-% BallTraj.ynoise = y+randn(NoD,1);
-% BallTraj.yd = ydot;
-% save BallTrajInf.mat BallTraj
+%% Linear Trajectory
+Ts      = 1/30;
+SimTime = 10;
+t       = 0:Ts:SimTime;
+NoD     = size(t, 2);
+
+xini = 100;  xfinal = 900;
+vx   = ((xfinal-xini)/SimTime) * 1.5;
+[x, xd, xdd] = SCurveTrajectory(xini, xfinal, SimTime, vx, Ts);
+
+yini = 100;  yfinal = 900;
+vy   = ((yfinal-yini)/SimTime) * 1.5;
+[y, yd, ydd] = SCurveTrajectory(yini, yfinal, SimTime, vy, Ts);
+
+noise = 5;                                           % Measurement Noise Std [pixel]
+clc, clear, close all;
+% Ball Video Creator Script
+% Written By: Rasit
+% Date: 11-Aug-2024
+%%
+videoFile = 'LinearTraj.avi';
+% videoFile = 'InfTraj.avi';
+writerObj = VideoWriter(videoFile, 'Uncompressed AVI');
+writerObj.FrameRate = 30;
+open(writerObj);
 
 %% Linear Trajectory
-Ts = 1/30;               % Sampling Time  Ms
-SimTime = 10;        % Simulation Time sec
-t = 0:Ts:SimTime;   % Time Vector
-NoD = size(t,2);       % Number Of Data
-xini = 100;      % Initial Position (X)
-xfinal =  900;  % Final Position (X)
-vx = ((xfinal-xini)/SimTime)*1.5;    % Velocity (X) Meter/sec
-[x,xd,xdd] = SCurveTrajectory(xini,xfinal,SimTime,vx,Ts);
+Ts      = 1/30;
+SimTime = 10;
+t       = 0:Ts:SimTime;
+NoD     = size(t, 2);
 
-yini = 100;      % Initial Position (Y)
-yfinal = 900;    % Final Position (Y)
-vy = ((yfinal-yini)/SimTime)*1.5;    % Velocity (Y) Meter/sec (Manual Velocity)
-[y,yd,ydd] = SCurveTrajectory(yini,yfinal,SimTime,vy,Ts);
+xini = 100;  xfinal = 900;
+vx   = ((xfinal-xini)/SimTime) * 1.5;
+[x, xd, xdd] = SCurveTrajectory(xini, xfinal, SimTime, vx, Ts);
 
-BallTraj.x = x;
-BallTraj.xnoise = x+randn(NoD,1);
-BallTraj.xd = xd;
-BallTraj.xdd = xdd;
-BallTraj.y = y;
-BallTraj.ynoise = y+randn(NoD,1);
-BallTraj.yd = yd;
-BallTraj.ydd = ydd;
+yini = 100;  yfinal = 900;
+vy   = ((yfinal-yini)/SimTime) * 1.5;
+[y, yd, ydd] = SCurveTrajectory(yini, yfinal, SimTime, vy, Ts);
+
+BallTraj.noise = 1;                                           % Measurement Noise Std [pixel]
+BallTraj.x      = x;
+BallTraj.xnoise = x + BallTraj.noise*randn(NoD,1);
+BallTraj.xd     = xd;  BallTraj.xdd = xdd;
+BallTraj.y      = y;
+BallTraj.ynoise = y + BallTraj.noise*randn(NoD,1);
+BallTraj.yd     = yd;  BallTraj.ydd = ydd;
 save BallTrajLinear.mat BallTraj
 
+%% Video Record
+fig = figure('Units','pixels','Position',[0 0 1920 1080],'Color','w', ...
+             'MenuBar','none','ToolBar','none');   
+ax            = gca;
+ax.Units      = 'pixels';
+ax.Position   = [0 0 1920 1080];                 % Exact pixel fill, no margins
+ballDiameter = 30;
+
+for k = 1:length(t)
+    cla
+    plot(BallTraj.xnoise(k), BallTraj.ynoise(k), 'ro', ...
+         'MarkerSize', ballDiameter, 'MarkerFaceColor', 'r');
+    axis off
+    xlim([0 1920]), ylim([0 1080])
+    writeVideo(writerObj, getframe(gca));
+end
+close(writerObj);x      = x;
+BallTraj.xnoise = x + noise*randn(NoD,1);
+BallTraj.xd     = xd;  BallTraj.xdd = xdd;
+BallTraj.y      = y;
+BallTraj.ynoise = y + noise*randn(NoD,1);
+BallTraj.yd     = yd;  BallTraj.ydd = ydd;
+save BallTrajLinear.mat BallTraj
 
 %% Video Record
+fig = figure('Units','pixels','Position',[0 0 1920 1080],'Color','w', ...
+             'MenuBar','none','ToolBar','none');   % Remove toolbar → exact canvas size
+ax            = gca;
+ax.Units      = 'pixels';
+ax.Position   = [0 0 1920 1080];                 % Exact pixel fill, no margins
 ballDiameter = 30;
-for k = 1:length(t)
-    fig = figure('Visible', 'off', 'Position', [0, 0, 1920, 1080]); % High resolution figure
-    set(gca, 'Color', 'w');
-    plot(BallTraj.xnoise(k), BallTraj.ynoise(k), 'ro', 'MarkerSize', ballDiameter, 'MarkerFaceColor', 'r'); % Positioning the ball in the center of the screen
-    xlim([0, 1920]);
-    ylim([0, 1080]);
-    axis off;
-    frame = getframe(gcf);
-    writeVideo(writerObj, frame);
-    close(fig);
-end
 
+for k = 1:length(t)
+    cla
+    plot(BallTraj.xnoise(k), BallTraj.ynoise(k), 'ro', ...
+         'MarkerSize', ballDiameter, 'MarkerFaceColor', 'r');
+    axis off
+    xlim([0 1920]), ylim([0 1080])
+    writeVideo(writerObj, getframe(gca));
+end
 close(writerObj);
