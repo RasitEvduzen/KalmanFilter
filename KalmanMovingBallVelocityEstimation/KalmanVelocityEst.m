@@ -27,7 +27,7 @@ Q   = 1e4 * [Ts^4/4 0      Ts^3/2 0;
     0      Ts^4/4 0      Ts^3/2;
     Ts^3/2 0      Ts^2   0;
     0      Ts^3/2 0      Ts^2];    % Process Noise Cov Matrix
-R   = BallTraj.noise* eye(2);                         % Measurement Noise Cov Matrix
+R   = BallTraj.noise^2* eye(2);                         % Measurement Noise Cov Matrix
 
 x_est       = [0; 0; 0; 0];                 % Initial State
 initialized = false;                          % First detection flag
@@ -41,7 +41,7 @@ trackedCoordinates = [];
 %% Kalman Loop
 figure('Units','pixels','Position',[0 0 1920 1080],'Color','w','MenuBar','none','ToolBar','none');
 idx = 0;
-SimPlot = 1;
+SimPlot = 0;
 while hasFrame(videoReader)
     frame = readFrame(videoReader);
     idx   = idx + 1;
