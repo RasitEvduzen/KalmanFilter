@@ -13,8 +13,6 @@ frameH      = videoReader.Height;
 frameW      = videoReader.Width;
 xlim_gen    = 1920;
 ylim_gen    = 1080;
-
-%% Occlusion Box (world coords: x1 y1 x2 y2)
 occ_box = BallTraj.occ_box;                 % [300 350 700 650]
 
 %% Kalman Filter Initialization
