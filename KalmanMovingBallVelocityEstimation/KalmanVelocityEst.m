@@ -102,14 +102,14 @@ t_ref = linspace(0, max(time), length(BallTraj.x));
 figure('units','normalized','outerposition',[0 0 1 1],'color','w')
 
 subplot(2,2,1)
-plot(time, poseX, 'r', 'LineWidth',2), hold on, grid on
-plot(t_ref, BallTraj.x, 'k', 'LineWidth',2)
+plot(time, poseX, 'r', 'LineWidth',3), hold on, grid on
+plot(t_ref, BallTraj.x, 'k--', 'LineWidth',2)
 legend('KF Estimate','True','Location','northwest')
 xlabel('Time [s]'), ylabel('X [pixel]'), title('X Position')
 
 subplot(2,2,2)
-plot(time, poseY, 'r', 'LineWidth',2), hold on, grid on
-plot(t_ref, BallTraj.y, 'k', 'LineWidth',2)
+plot(time, poseY, 'r', 'LineWidth',3), hold on, grid on
+plot(t_ref, BallTraj.y, 'k--', 'LineWidth',2)
 legend('KF Estimate','True','Location','northwest')
 xlabel('Time [s]'), ylabel('Y [pixel]'), title('Y Position')
 
