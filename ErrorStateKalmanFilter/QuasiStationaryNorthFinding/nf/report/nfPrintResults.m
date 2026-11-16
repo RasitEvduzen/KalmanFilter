@@ -1,6 +1,7 @@
 function nfPrintResults(res)
 %NFPRINTRESULTS Print the north-finding result (res from nfSummary) to the command window.
 
+k = nfEarthConstants();
 s = res.summary;
 c = res.check;
 cfg = res.cfg;
@@ -16,6 +17,10 @@ end
 w = cfg.align.window;
 fprintf('leveling + gyrocompass %g-%s s: roll %.4f, pitch %.4f, heading %.3f +- %.2f deg\n', w(1), endLabel(w(2)), ...
     s.roll0_deg, s.pitch0_deg, s.coarse_heading_deg, s.coarse_sigma_deg);
+a = res.align;
+fprintf(['  north specific-force drift %+.2f ug over the window: equivalent east gyro bias %+.3f deg/h, ' ...
+    'shifts the ESKF heading by %+.2f deg (not the average)\n'], a.fN_drift / k.UG, ...
+    a.eps_drift / k.DPH, a.dpsi_drift * 180 / pi);
 for i = 1:numel(res.gc)
     w = res.gc(i).window;
     fprintf('static gyrocompass %g-%s s: %.3f +- %.2f deg\n', w(1), endLabel(w(2)), s.gc_heading_deg(i), s.gc_sigma_deg(i));

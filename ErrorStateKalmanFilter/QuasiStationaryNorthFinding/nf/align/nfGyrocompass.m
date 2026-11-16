@@ -12,9 +12,15 @@ function a = nfGyrocompass(t, W_b, F_b, window, cfg)
 %   N_E = gyro noise density projected on east (cfg.sensor.arw_dph), sigma_bg = residual gyro
 %   bias (cfg.sensor.bg_dph), sigma_ba = accelerometer bias (cfg.sensor.ba_mg), T = span
 %   length, L = cfg.site.lat_deg.
+%   North specific-force drift (Savage, Strapdown Analytics, sec. 14.4): a linear trend fdot_N of
+%   the north specific force tilts the level frame about east at fdot_N / g. The average above sees
+%   only its mean, but a filter that follows the tilt over time (nfEskf) takes it for an east gyro
+%   bias eps = -fdot_N / g, which shifts its heading by fdot_N / (g W cosL).
 %
 %   a: roll, pitch, heading, sigma, sigma_noise, sigma_bias, sigma_accel [rad], C (C_b^n),
-%   f_mean, w_mean (3x1), n (samples), T [s], window.
+%   f_mean, w_mean (3x1), n (samples), T [s], window, fN_drift (change of the fitted north
+%   specific force over the window [m/s^2]), eps_drift (equivalent east gyro bias [rad/s]),
+%   dpsi_drift (heading shift of a tilt-following filter [rad]).
 
 D2R = pi / 180;
 k = nfEarthConstants();
@@ -44,8 +50,15 @@ a.heading = heading;
 a.sigma_noise = N_E / (OcL * sqrt(T));
 a.sigma_bias = cfg.sensor.bg_dph * k.DPH / OcL;
 L = cfg.site.lat_deg * D2R;
-a.sigma_accel = tan(L) * cfg.sensor.ba_mg * 1e-3 * k.g_std / nfGravity(L, cfg.site.h_m);
+g = nfGravity(L, cfg.site.h_m);
+a.sigma_accel = tan(L) * cfg.sensor.ba_mg * 1e-3 * k.g_std / g;
 a.sigma = sqrt(a.sigma_noise^2 + a.sigma_bias^2 + a.sigma_accel^2);
+
+tm = t(m) - mean(t(m));
+fdot_N = sum(tm .* (C(1, :) * F_b(:, m))) / sum(tm.^2);   % least-squares slope [m/s^2 per s]
+a.fN_drift = fdot_N * (tm(end) - tm(1));
+a.eps_drift = -fdot_N / g;
+a.dpsi_drift = fdot_N / (g * OcL);
 a.C = C;
 a.f_mean = f;
 a.w_mean = w;
